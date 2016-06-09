@@ -1,0 +1,24 @@
+Q2.1
++ divide complex problem into smaller, more manageable pieces (independent & parallel execution)
++ hiding implementation details from other layers: easy to upgrade a part of the system
+- adds overhead at every layer
+
+Q2.2
+Yes
+
+Q2.3
+0.012159 Seconds
+
+Q2.4
+1667848 Bytes (1.59 Mbyte)
+
+Q2.5
+137168602.086 Avg. bytes/sec 
+1097.349 Avg Mbit/sec
+
+Q2.6
+10.0.0.1
+22:33:fb:45:f7:5e
+
+Q2.7
+The mac adres of the destiation machine.

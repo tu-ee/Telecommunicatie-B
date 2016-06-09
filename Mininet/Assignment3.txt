@@ -1,0 +1,155 @@
+
+r1 ifconfig r1-eth0 192.168.1.1 netmask 255.255.255.0 
+h1 ifconfig h1-eth0 192.168.1.2 netmask 255.255.255.0 
+
+r1 ifconfig r1-eth1 192.168.2.1/24 
+h2 ifconfig h2-eth0 192.168.2.2/24 
+
+h1 route add -net 192.168.2.0/24 gw 192.168.1.1 
+h2 route add -net 192.168.1.0/24 gw 192.168.2.1 
+
+h1 route add -net 192.168.2.0/24 gw 192.168.1.1 
+h2 route add -net 192.168.1.0/24 gw 192.168.2.1 
+
+q3.1
+They must match on the amount of bits specified, for example:
+192.168.1.0/24 says that the first 24 bits of 192.168.1.0 must match with the ip adres target of the packet
+
+q3.2 
+when the specified target ip & netmask == network adress & netmask
+
+q3.3
+The difference is that the first rule 'learns' h1 where to send data for 192.168.2.0/24 whereis the second rule learns h2 where to send data for 192.168.1.0/24
+
+q3.4
+the first rule, by the order they are specified
+
+q3.5
+subnetmask: 255.255.255.240 or /28
+target ip & subnet mask == route network & subnet mask
+& = bitwise and
+
+q3.6
+amount of networks bits available 28 - 24 = 4
+2^4 = 16 subnets
+
+q3.7
+192.168.1.0/28
+192.168.1.32/28
+192.168.1.48/28
+192.168.1.64/28
+
+australia 192.168.1.65
+eqypt 192.168.1.1
+america 192.168.1.49
+brazil 192.168.1.33
+
+australia 192.168.1.65
+eqypt 192.168.1.1
+america 192.168.1.49
+brazil 192.168.1.33
+
+sydney 192.168.1.77
+brussels 192.168.1.70 192.168.1.6 192.168.1.54 192.168.1.38
+miami 192.168.1.10
+rio 192.168.1.42
+cairo 192.168.1.74
+
+
+q3.8
+brazil - rio - brussels - cairo - eqypt
+
+q3.9
+yes, the fysically shortest.
+fiber delay is low but is always limited to lightspeed, so shorter distance is better.
+
+three options:
+brazil - rio - brussels - cairo - eqypt
+9438.43 + 3213.72 = 12652.15 KM
+
+brazil - rio - miami - cairo - eqypt
+6729.14 + 10447.69 = 17176.83 KM
+
+brazil - rio - sydney - cairo - eqypt
+14432.44 + 13536.37 = 27968.81 KM
+
+
+q3.10
+# Hosts
+brazil = self.addHost( 'brazil' )
+australia = self.addHost('australia')
+eqypt = self.addHost('eqypt')
+america = self.addHost('america')
+
+# Routers
+rio = self.addHost('rio')
+sydney = self.addHost('sydney')
+brussels = self.addHost('brussels')
+cairo = self.addHost('cairo')
+miami = self.addHost('miami')
+
+# Add links
+self.addLink( australia, sydney  )
+self.addLink( brazil, rio  )
+self.addLink( eqypt, cairo  )
+self.addLink( america, miami  )
+
+self.addLink( miami, rio )
+self.addLink( sydney, cairo )
+
+
+self.addLink( miami, cairo )
+self.addLink( sydney, rio )
+
+self.addLink( rio, brussels )
+self.addLink( miami, brussels )
+self.addLink( cairo, brussels  )
+self.addLink( sydney, brussels )
+
+links
+america-eth0<->miami-eth0 (OK OK)
+australia-eth0<->sydney-eth0 (OK OK)
+brazil-eth0<->rio-eth0 (OK OK)
+cairo-eth3<->brussels-eth2 (OK OK)
+eqypt-eth0<->cairo-eth0 (OK OK)
+miami-eth3<->brussels-eth1 (OK OK)
+miami-eth2<->cairo-eth2 (OK OK)
+miami-eth1<->rio-eth1 (OK OK)
+rio-eth3<->brussels-eth0 (OK OK)
+sydney-eth3<->brussels-eth3 (OK OK)
+sydney-eth1<->cairo-eth1 (OK OK)
+sydney-eth2<->rio-eth2 (OK OK)
+
+brazil ifconfig brazil-eth0 192.168.1.33/28 
+rio ifconfig rio-eth0 192.168.1.35/28 
+rio ifconfig rio-eth3 192.168.1.36/28 
+brussels ifconfig brussels-eth0 192.168.1.38/28 
+
+brussels ifconfig brussels-eth2 192.168.1.6/28
+eqypt ifconfig eqypt-eth0 192.168.1.1/28 
+cairo ifconfig cairo-eth0 192.168.1.2/28 
+cairo ifconfig cairo-eth3 192.168.1.4/28 
+
+brazil route add -net 192.168.1.0/28 gw 192.168.1.35
+rio route add -net 192.168.1.0/28 gw 192.168.1.38 dev rio-eth3
+brussels route add -net 192.168.1.0/28 gw 192.168.1.4 dev brussels-eth2
+
+eqypt route add -net 192.168.1.32/28 gw 192.168.1.2 
+cairo route add -net 192.168.1.32/28 gw 192.168.1.6 dev cairo-eth3
+brussels route add -net 192.168.1.32/28 gw 192.168.1.36 dev brussels-eth0
+
+mininet> brazil ping eqypt
+PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.
+64 bytes from 192.168.1.1: icmp_seq=1 ttl=61 time=0.055 ms
+64 bytes from 192.168.1.1: icmp_seq=2 ttl=61 time=0.030 ms
+64 bytes from 192.168.1.1: icmp_seq=3 ttl=61 time=0.032 ms
+64 bytes from 192.168.1.1: icmp_seq=4 ttl=61 time=0.033 ms
+64 bytes from 192.168.1.1: icmp_seq=5 ttl=61 time=0.036 ms
+^C
+--- 192.168.1.1 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 3998ms
+rtt min/avg/max/mdev = 0.030/0.037/0.055/0.009 ms
+
+mininet> iperf brazil eqypt
+*** Iperf: testing TCP bandwidth between brazil and eqypt
+*** Results: ['31.0 Gbits/sec', '31.0 Gbits/sec']

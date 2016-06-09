@@ -1,0 +1,19 @@
+q1.1) Because you are dealing with roundtrip times so time is minimally 2*delay = 10ms
+
+q1.2)
+h1 = self.addHost('h1')
+h2 = self.addHost('h2')
+h3 = self.addHost('h3')
+h4 = self.addHost('h4')
+s1 = self.addSwitch('s1')
+s2 = self.addSwitch('s2')
+
+self.addLink(h1, s1, bw = 100)
+self.addLink(h2, s1, bw = 100)
+self.addLink(h3, s2, bw = 100)
+self.addLink(h4, s2, bw = 100)
+self.addLink(s1, s2, bw = 10, loss = 1, delay = '5ms')
+
+q1.3)
+iperf h1 h2: 70.3 Mbits/sec 72.2 Mbits/sec
+iperf h1 h3: 9.45 Mbits/sec 9.60 Mbits/sec

@@ -1,0 +1,65 @@
+Q4.1
+100110011001
+11011       
+ 10000      
+ 11011      
+  10110     
+  11011     
+   11011    
+   11011    
+        1001
+Has not been received correctly.
+
+Q4.2
+Segment 1:
+ src: 10.0.0.2:48902
+ dst: 10.0.0.1:80
+ flags:
+  - Don't Fragment
+  - Syn
+ maximum segment size: 1460 bytes
+ sequence number: 0 (5ed53b74)
+ header length: 20(ip)+40(tcp) bytes
+ version: 4
+
+Segment 2:
+ src: 10.0.0.1:80
+ dst: 10.0.0.2:48902
+ flags:
+  - Don't Fragment
+  - Syn
+  - Acknowledgment
+ maximum segment size: 1460 bytes
+ sequence number: 1 (7f157721)
+ header length: 20(ip)+40(tcp) bytes
+ version: 4
+
+Segment 3:
+ src: 10.0.0.2:48902
+ dst: 10.0.0.1:80
+ flags:
+  - Don't Fragment
+  - Acknowledgment
+ sequence number: 1 (5ed53b75)
+ header length: 20(ip)+32(tcp) bytes
+ version: 4
+
+Q4.3
+Round-trip Time:
+How much time it takes to send to packet to the host and get an ACK back
+
+Throughput Graph:
+the throughput at certain time points
+
+Time/Sequence  (Stevens’-style):
+Plot of a packet sequence numbers compared to their arrival times
+
+Time/Sequence (tcptrace-style):
+Line graph of current sequence number against time
+
+Q4.4
+server -> client packet with FIN,ACK flag
+client -> server packet with FIN,ACK flag
+server -> client packet with ACK flag
+
+by timeout, wherein the client/server don't send ack packets anymore
